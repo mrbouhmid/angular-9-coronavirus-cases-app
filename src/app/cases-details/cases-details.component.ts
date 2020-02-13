@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { Cases } from '../cases';
+import { CasesComponent } from '../cases/cases.component';
 
 @Component({
   selector: 'app-cases-details',
@@ -12,11 +13,15 @@ export class CasesDetailsComponent implements OnInit {
 
   cases: Cases = { _id: '', name: '', gender: '', age: null, address: '', city: '', country: '', status: '', updated: null };
   isLoadingResults = true;
+  case: Cases;
 
   constructor(private route: ActivatedRoute, private api: ApiService, private router: Router) { }
 
   ngOnInit(): void {
     this.getCasesDetails(this.route.snapshot.params.id);
+    /*this.api.getData().subscribe( data =>{
+      this.getCasesDetails(data.id);
+  })*/
   }
 
   getCasesDetails(id: string) {

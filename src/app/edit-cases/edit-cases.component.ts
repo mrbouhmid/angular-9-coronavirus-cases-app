@@ -20,7 +20,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class EditCasesComponent implements OnInit {
 
   casesForm: FormGroup;
-  _id = '';
+  id = '';
   name = '';
   gender = '';
   age: number = null;
@@ -44,13 +44,14 @@ export class EditCasesComponent implements OnInit {
       address : [null, Validators.required],
       city : [null, Validators.required],
       country : [null, Validators.required],
-      status : [null, Validators.required]
+      status : [null, Validators.required],
+      updated : Validators.required
     });
   }
 
   getCasesById(id: any) {
     this.api.getCasesById(id).subscribe((data: any) => {
-      this._id = data._id;
+      this.id = data.id;
       this.casesForm.setValue({
         name: data.name,
         gender: data.gender,
@@ -58,18 +59,19 @@ export class EditCasesComponent implements OnInit {
         address: data.address,
         city: data.city,
         country: data.country,
-        status: data.status
+        status: data.status,
+        updated: new Date()
       });
     });
   }
 
   onFormSubmit() {
     this.isLoadingResults = true;
-    this.api.updateCases(this._id, this.casesForm.value)
+    this.api.updateCases(this.id, this.casesForm.value)
       .subscribe((res: any) => {
-          const id = res._id;
+          //const id = res._id;
           this.isLoadingResults = false;
-          this.router.navigate(['/cases-details', id]);
+          this.router.navigate(['/cases-details', this.id]);
         }, (err: any) => {
           console.log(err);
           this.isLoadingResults = false;
@@ -78,7 +80,7 @@ export class EditCasesComponent implements OnInit {
   }
 
   casesDetails() {
-    this.router.navigate(['/cases-details', this._id]);
+    this.router.navigate(['/cases-details', this.id]);
   }
 
 }

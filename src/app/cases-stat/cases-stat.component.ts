@@ -30,7 +30,16 @@ export class CasesStatComponent implements OnInit {
   }
 
   getStatistic(status: string) {
-    this.barChartData = [{ data: [], backgroundColor: [], label: this.label }];
+
+    this.api.getStatistic(status)
+    .subscribe((res: any) => {
+      this.stats = res; 
+      console.log("status");
+      console.log(this.stats);
+    
+    })
+
+    /*this.barChartData = [{ data: [], backgroundColor: [], label: this.label }];
     this.barChartLabels = [];
     this.api.getStatistic(status)
     .subscribe((res: any) => {
@@ -53,7 +62,7 @@ export class CasesStatComponent implements OnInit {
     }, err => {
       console.log(err);
       this.isLoadingResults = false;
-    });
+    });*/
   }
 
   changeStatus() {

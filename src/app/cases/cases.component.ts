@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Cases } from '../cases';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cases',
@@ -9,11 +10,11 @@ import { Cases } from '../cases';
 })
 export class CasesComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'age', 'status'];
+  displayedColumns: string[] = ['id', 'name', 'age', 'status'];
   data: Cases[] = [];
   isLoadingResults = true;
 
-  constructor(private api: ApiService) { }
+  constructor(private api: ApiService , private router : Router) { }
 
   ngOnInit(): void {
     this.api.getCases()
@@ -26,5 +27,12 @@ export class CasesComponent implements OnInit {
       this.isLoadingResults = false;
     });
   }
+
+  onViewCase(cases : Cases){
+    this.router.navigate(['/cases-details/',cases.id]);
+    //console.log(this.cases)
+    //this.api.setData(cases);
+
+}
 
 }

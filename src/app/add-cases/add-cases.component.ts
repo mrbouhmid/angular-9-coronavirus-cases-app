@@ -34,7 +34,12 @@ export class AddCasesComponent implements OnInit {
 
   constructor(private router: Router, private api: ApiService, private formBuilder: FormBuilder) { }
 
+  id : number;
   ngOnInit(): void {
+
+ /*   this.api.getData().subscribe( data =>{
+      this.id = data.id;
+  })*/
     this.casesForm = this.formBuilder.group({
       name : [null, Validators.required],
       gender : [null, Validators.required],
@@ -42,7 +47,8 @@ export class AddCasesComponent implements OnInit {
       address : [null, Validators.required],
       city : [null, Validators.required],
       country : [null, Validators.required],
-      status : [null, Validators.required]
+      status : [null, Validators.required],
+      updated : [new Date(), Validators.required]
     });
   }
 
@@ -50,7 +56,7 @@ export class AddCasesComponent implements OnInit {
     this.isLoadingResults = true;
     this.api.addCases(this.casesForm.value)
       .subscribe((res: any) => {
-          const id = res._id;
+          const id = res.id;
           this.isLoadingResults = false;
           this.router.navigate(['/cases-details', id]);
         }, (err: any) => {

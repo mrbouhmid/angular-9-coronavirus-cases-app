@@ -27,8 +27,8 @@
       </dl>
     </mat-card-content>
     <mat-card-actions>
-      <a mat-flat-button color="primary" [routerLink]="['/edit-cases', cases._id]"><mat-icon>edit</mat-icon> Cases</a>
-      <a mat-flat-button color="warn" (click)="deleteCases(cases._id)"><mat-icon>delete</mat-icon> Cases</a>
+      <a mat-flat-button color="primary" [routerLink]="['/edit-cases', cases.id]"><mat-icon>edit</mat-icon> Cases</a>
+      <a mat-flat-button color="warn" (click)="deleteCases(cases.id)"><mat-icon>delete</mat-icon> Cases</a>
     </mat-card-actions>
   </mat-card>
 </div>

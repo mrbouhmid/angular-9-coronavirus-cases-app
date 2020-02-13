@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Cases } from './cases';
 import { Statistic } from './statistic';
@@ -8,7 +8,7 @@ import { Statistic } from './statistic';
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
-const apiUrl = 'http://localhost:3000/api';
+const apiUrl = 'http://localhost:3000/api/cases';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +32,16 @@ export class ApiService {
     return this.http.get<Cases[]>(`${apiUrl}`)
       .pipe(
         tap(cases => console.log('fetched cases')),
+        map( 
+          responseData => {
+            const postsArray: Cases[] = [];
+            for (const key in responseData) {
+              if (responseData.hasOwnProperty(key)) {
+                postsArray.push({ ...responseData[key], _id: key });
+              }
+            }
+            return postsArray;
+          }),
         catchError(this.handleError('getCases', []))
       );
   }
@@ -68,10 +78,24 @@ export class ApiService {
   }
 
   getStatistic(status: string): Observable<Statistic> {
-    const url = `${apiUrl}/daily/${status}`;
-    return this.http.get<Statistic>(url).pipe(
+    //const url = `${apiUrl}/daily/${status}`;
+    const filter = `{"where":{"status":"%${status}%"}}`;
+     const url = 'http://localhost:3000/api/cases/';
+     const params = new HttpParams().set('filter', filter);
+    return this.http.get<Statistic>(url,{params}).pipe(
       tap(_ => console.log(`fetched statistic status=${status}`)),
       catchError(this.handleError<Statistic>(`getStatistic status=${status}`))
     );
+  }
+
+  /* to exchange data between two component */
+  private _data: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+  public setData(data: any){
+      this._data.next(data);
+  }
+
+  public getData(): Observable<any> {
+      return this._data.asObservable();
   }
 }
